@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Secure Login Portal</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="login.css" />
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-header">
+        <h1>Secure Login</h1>
+        <p>Enter your credentials to access the system</p>
+      </div>
+
+      <div class="login-body">
+        <div id="alertBox" class="alert" style="display: none"></div>
+
+        <div class="security-info">
+          <i class="fas fa-shield-alt"></i>
+          <span
+            >This is a secure system. All login attempts are monitored and
+            recorded.</span
+          >
+        </div>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <i class="fas fa-user input-icon"></i>
+            <input
+              type="text"
+              id="username"
+              class="input-field"
+              placeholder="Enter your username"
+              required
+              autocomplete="username"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <i class="fas fa-lock input-icon"></i>
+            <input
+              type="password"
+              id="password"
+              class="input-field"
+              placeholder="Enter your password"
+              required
+              autocomplete="current-password"
+            />
+            <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+          </div>
+
+          <button type="submit" class="btn" id="loginBtn">
+            <span id="btnText">Login</span>
+            <div class="spinner" id="spinner"></div>
+          </button>
+        </form>
+
+        <div class="form-lock" id="formLock">
+          <i class="fas fa-lock"></i>
+          <p>
+            Security alert triggered! System administrator has been notified.
+          </p>
+        </div>
+      </div>
+
+      <div class="login-footer">
+        <p>Having trouble? <a href="#">Contact support</a></p>
+        <p>&copy; 2023 Secure Systems. All rights reserved.</p>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="login.js"></script>
+  </body>
+</html>

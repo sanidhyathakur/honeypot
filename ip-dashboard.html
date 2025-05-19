@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IP Dashboard - Honeypot Monitoring</title>
+
+    <!-- Fonts and Icons -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+
+    <!-- Leaflet MarkerCluster CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
+    />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="ip-dashboard.css" />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Header Section -->
+      <header class="dashboard-header">
+        <div class="header-title">
+          <h1><i class="fas fa-shield-alt"></i> IP Monitoring Dashboard</h1>
+          <span class="status-indicator online">
+            <i class="fas fa-circle"></i> Monitoring Active
+          </span>
+        </div>
+        <div class="header-controls">
+          <button id="testConnection" class="btn btn-secondary">
+            <i class="fas fa-network-wired"></i> Test Connection
+          </button>
+          <button id="refreshData" class="btn btn-primary">
+            <i class="fas fa-sync-alt"></i> Refresh Data
+          </button>
+        </div>
+      </header>
+
+      <!-- Stats Bar -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-icon">
+            <i class="fas fa-globe"></i>
+          </div>
+          <div class="stat-content">
+            <h3 id="totalIPs">0</h3>
+            <p>Total IPs</p>
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon warning">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="stat-content">
+            <h3 id="suspiciousIPs">0</h3>
+            <p>Suspicious IPs</p>
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon danger">
+            <i class="fas fa-ban"></i>
+          </div>
+          <div class="stat-content">
+            <h3 id="blockedIPs">0</h3>
+            <p>Blocked IPs</p>
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon info">
+            <i class="fas fa-camera"></i>
+          </div>
+          <div class="stat-content">
+            <h3 id="capturedImages">0</h3>
+            <p>Images Captured</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <main class="dashboard-content">
+        <!-- Map Panel -->
+        <section class="map-panel">
+          <div class="panel-header">
+            <h2><i class="fas fa-map-marked-alt"></i> IP Geolocation Map</h2>
+            <div class="panel-controls">
+              <button id="centerMap" class="btn btn-small">
+                <i class="fas fa-crosshairs"></i>
+              </button>
+              <button id="toggleCluster" class="btn btn-small">
+                <i class="fas fa-object-group"></i>
+              </button>
+            </div>
+          </div>
+
+          <div id="ipMap" class="map-container"></div>
+
+          <!-- Map Legend -->
+          <div class="map-legend">
+            <h3>Map Legend</h3>
+            <div class="legend-item">
+              <div class="legend-marker normal"></div>
+              <span>Normal Activity</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-marker medium-risk"></div>
+              <span>Medium Risk (2+ Failed Attempts)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-marker high-risk"></div>
+              <span>High Risk (3+ Failed Attempts)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-marker blocked"></div>
+              <span>Blocked IP</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Details Panel -->
+        <section class="details-panel">
+          <!-- IP Information -->
+          <div class="ip-info-container">
+            <div class="panel-header">
+              <h2><i class="fas fa-info-circle"></i> IP Details</h2>
+              <div class="last-updated">
+                Updated: <span id="lastUpdated">Never</span>
+              </div>
+            </div>
+
+            <div id="ipInfoContent">
+              <div id="ipInfo" class="ip-details">
+                <div class="info-header">
+                  <div id="ipRiskIndicator" class="risk-indicator">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span
+                      >Risk Level: <strong id="riskLevel">Unknown</strong></span
+                    >
+                  </div>
+                </div>
+
+                <div class="info-item">
+                  <label>IP Address:</label>
+                  <span id="ipAddress">-</span>
+                </div>
+                <div class="info-item">
+                  <label>Location:</label>
+                  <span id="ipLocation">-</span>
+                </div>
+                <div class="info-item">
+                  <label>Country:</label>
+                  <span id="ipCountry">-</span>
+                </div>
+                <div class="info-item">
+                  <label>Organization:</label>
+                  <span id="ipOrg">-</span>
+                </div>
+                <div class="info-item">
+                  <label>Region:</label>
+                  <span id="ipRegion">-</span>
+                </div>
+                <div class="info-item">
+                  <label>City:</label>
+                  <span id="ipCity">-</span>
+                </div>
+                <div class="info-item">
+                  <label>Postal:</label>
+                  <span id="ipPostal">-</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Image Gallery Panel -->
+          <div class="captures-container">
+            <div class="panel-header">
+              <h2><i class="fas fa-camera"></i> Captured Images</h2>
+              <div class="panel-controls">
+                <button id="refreshGallery" class="btn btn-small">
+                  <i class="fas fa-sync-alt"></i>
+                </button>
+              </div>
+            </div>
+
+            <div id="imageGallery" class="image-gallery"></div>
+
+            <div id="noImagesMessage" class="empty-state">
+              <i class="fas fa-image"></i>
+              <p>No images captured yet</p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Image Modal -->
+      <div id="imageModal" class="modal">
+        <span class="modal-close">&times;</span>
+        <img id="modalImage" class="modal-content" />
+        <div id="modalCaption"></div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- Leaflet JS -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+
+    <!-- Leaflet MarkerCluster JS -->
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
+    <!-- Custom Dashboard JS -->
+    <script src="ip-dashboard.js"></script>
+  </body>
+</html>
