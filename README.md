@@ -24,7 +24,7 @@ Timeline of intrusion attempts
 
 Gallery of captured screenshots (when attackers interact with fake inputs)
 
-Stealth Mode:
+Stealth Mode :
 
 Mimics real login pages (customizable templates)
 Screenshots
